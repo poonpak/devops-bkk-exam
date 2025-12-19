@@ -1,0 +1,16 @@
+Description=My Node.js Application
+After=network.target
+
+[Service]
+User=laborant
+
+
+WorkingDirectory=/home/laborant
+
+Environment=NODE_ENV=production
+Environment=PORT=4444
+
+ExecStart=/usr/bin/node index.js
+
+[Install]
+WantedBy=multi-user.target
