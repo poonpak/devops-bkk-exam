@@ -17,7 +17,6 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'my-private-key', keyFileVariable: 'MY_KEY_FILE', usernameVariable: 'MY_USER')]) {
                     script {
                         sh "scp -o StrictHostKeyChecking=no -i ${MY_KEY_FILE} index.js package.json laborant@target:~"
-                        sh "scp -i ${MY_KEY_FILE} -o StrictHostKeyChecking=no main laborant@target:~"
                         sh "scp -i ${MY_KEY_FILE} -o StrictHostKeyChecking=no myexam.service laborant@target:~"
                         sh """
                                 ssh -o StrictHostKeyChecking=no -i ${MY_KEY_FILE} laborant@target '
