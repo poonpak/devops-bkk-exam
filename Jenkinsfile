@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-       go "node-lts"
+       nodejs "node-lts"
     }
 
     stages {
