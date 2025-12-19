@@ -47,7 +47,9 @@ pipeline {
                     script {
                         sh """
                                 ssh -o StrictHostKeyChecking=no -i ${MY_KEY_FILE} laborant@docker '
-                                    docker run -d -p 4444:4444 ttl.sh/myapp-poonpak-p:1h
+                                    docker stop myapp || true
+                                    docker rm myapp || true
+                                    docker run --name myapp -d -p 4444:4444 ttl.sh/myapp-poonpak-p:1h
                                 '
                             """
                     }
