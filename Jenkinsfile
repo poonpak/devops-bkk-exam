@@ -14,14 +14,13 @@ pipeline {
         }
         stage('Deploy to target') {
             steps {
-                withCredentials([string(credentialsId: 'my-private-key', variable: 'SSH_KEY')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'my-private-key', keyFileVariable: 'MY_KEY_FILE', usernameVariable: 'MY_USER')]) {
                     script {
-                        sh 'echo "$SSH_KEY" > deploy.key && chmod 600 deploy.key'
-                        sh "scp -o StrictHostKeyChecking=no -i deploy.key index.js package.json laborant@target:~"
-                        sh "scp -i deploy.key -o StrictHostKeyChecking=no main laborant@target:~"
-                        sh "scp -i deploy.key -o StrictHostKeyChecking=no myexam.service laborant@target:~"
+                        sh "scp -o StrictHostKeyChecking=no -i ${MY_KEY_FILE} index.js package.json laborant@target:~"
+                        sh "scp -i ${MY_KEY_FILE} -o StrictHostKeyChecking=no main laborant@target:~"
+                        sh "scp -i ${MY_KEY_FILE} -o StrictHostKeyChecking=no myexam.service laborant@target:~"
                         sh """
-                                ssh -o StrictHostKeyChecking=no -i deploy.key laborant@target '
+                                ssh -o StrictHostKeyChecking=no -i ${MY_KEY_FILE} laborant@target '
                                     npm install --production
                                     sudo mv ~/myexam.service /etc/systemd/system/myexam.service
                                 sudo systemctl daemon-reload
