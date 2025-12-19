@@ -61,7 +61,6 @@ pipeline {
                  withKubeConfig([credentialsId: 'kube-config', serverUrl: 'https://kubernetes:6443']) {
                   sh 'kubectl apply -f deployment.yaml'
                   sh 'kubectl apply -f service.yaml'
-                  sh 'kubectl port-forward svc/myapp-deployment 4444:4444'
                 }
             }
         }
