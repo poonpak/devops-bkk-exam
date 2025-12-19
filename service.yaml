@@ -9,6 +9,7 @@ spec:
   - port: 4444
     protocol: TCP
     targetPort: 4444
+    nodePort: 30001 
   selector:
-    run: myapp
+    app: myapp 
   type: NodePort
