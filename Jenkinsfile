@@ -20,8 +20,10 @@ pipeline {
                         sh "scp -i ${MY_KEY_FILE} -o StrictHostKeyChecking=no myapp.service laborant@target:~"
                         sh """
                                 ssh -o StrictHostKeyChecking=no -i ${MY_KEY_FILE} laborant@target '
-                                    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+                                    curl -fsSL https://deb.nodesource.com/setup_24.x -o nodesource_setup.sh
+                                    sudo -E bash nodesource_setup.sh
                                     sudo apt-get install -y nodejs
+
                                     npm install --production
                                     sudo mv ~/myapp.service /etc/systemd/system/myapp.service
                                     sudo systemctl daemon-reload
