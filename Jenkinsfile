@@ -20,11 +20,13 @@ pipeline {
                         sh "scp -i ${MY_KEY_FILE} -o StrictHostKeyChecking=no myexam.service laborant@target:~"
                         sh """
                                 ssh -o StrictHostKeyChecking=no -i ${MY_KEY_FILE} laborant@target '
+                                    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+                                    sudo apt-get install -y nodejs
                                     npm install --production
                                     sudo mv ~/myexam.service /etc/systemd/system/myexam.service
-                                sudo systemctl daemon-reload
-                                sudo systemctl restart myexam.service
-                                exit 0
+                                    sudo systemctl daemon-reload
+                                    sudo systemctl restart myexam.service
+                                    exit 0
                                 '
                             """
                     }
