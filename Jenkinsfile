@@ -17,16 +17,35 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'my-private-key', keyFileVariable: 'MY_KEY_FILE', usernameVariable: 'MY_USER')]) {
                     script {
                         sh "scp -o StrictHostKeyChecking=no -i ${MY_KEY_FILE} index.js package.json laborant@target:~"
-                        sh "scp -i ${MY_KEY_FILE} -o StrictHostKeyChecking=no myexam.service laborant@target:~"
+                        sh "scp -i ${MY_KEY_FILE} -o StrictHostKeyChecking=no myapp.service laborant@target:~"
                         sh """
                                 ssh -o StrictHostKeyChecking=no -i ${MY_KEY_FILE} laborant@target '
                                     curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
                                     sudo apt-get install -y nodejs
                                     npm install --production
-                                    sudo mv ~/myexam.service /etc/systemd/system/myexam.service
+                                    sudo mv ~/myapp.service /etc/systemd/system/myapp.service
                                     sudo systemctl daemon-reload
-                                    sudo systemctl restart myexam.service
+                                    sudo systemctl restart myapp.service
                                     exit 0
+                                '
+                            """
+                    }
+                }
+            }
+        }
+        stage ('Docker Build') {
+            steps {
+                sh 'docker build -t ttl.sh/myapp-poonpak-p:1h .'
+                sh 'docker push ttl.sh/myapp-poonpak-p:1h'
+            }
+        }
+        stage('Deploy to docker') {
+            steps {
+                withCredentials([sshUserPrivateKey(credentialsId: 'my-private-key', keyFileVariable: 'MY_KEY_FILE', usernameVariable: 'MY_USER')]) {
+                    script {
+                        sh """
+                                ssh -o StrictHostKeyChecking=no -i ${MY_KEY_FILE} laborant@docker '
+                                    docker run -p 4444:4444 ttl.sh/myapp-poonpak-p:1h
                                 '
                             """
                     }
