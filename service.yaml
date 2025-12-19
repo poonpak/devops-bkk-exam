@@ -10,5 +10,5 @@ spec:
     protocol: TCP
     targetPort: 4444
   selector:
-    app: myapp
-  type: ClusterIP
+    run: myapp
+  type: NodePort
