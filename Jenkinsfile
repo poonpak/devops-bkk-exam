@@ -19,6 +19,7 @@ pipeline {
                         sh 'echo "$SSH_KEY" > deploy.key && chmod 600 deploy.key'
                         sh "scp -o StrictHostKeyChecking=no -i deploy.key index.js package.json laborant@target:~"
                     }
+                }
             }
             steps {
                 withCredentials([file(credentialsId: 'my-key-file', variable: 'KEY_PATH')]) {
