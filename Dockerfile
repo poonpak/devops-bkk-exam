@@ -1,5 +1,5 @@
 # ใช้ Base Image ที่เล็กที่สุด (Alpine)
-FROM node:20-alpine
+FROM node:24-alpine
 
 # สร้างโฟลเดอร์ทำงาน
 WORKDIR /app

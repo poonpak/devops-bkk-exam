@@ -45,10 +45,18 @@ pipeline {
                     script {
                         sh """
                                 ssh -o StrictHostKeyChecking=no -i ${MY_KEY_FILE} laborant@docker '
-                                    docker run -p 4444:4444 ttl.sh/myapp-poonpak-p:1h
+                                    docker run -d -p 4444:4444 ttl.sh/myapp-poonpak-p:1h
                                 '
                             """
                     }
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                 withKubeConfig([credentialsId: 'my-private-key', serverUrl: 'https://kubernetes:6443']) {
+                  sh 'kubectl apply -f deployment.yaml'
+                  sh 'kubectl apply -f service.yaml'
                 }
             }
         }
